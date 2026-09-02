@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: #f3f2f2; }
+  a { color: var(--color-accent-700); text-decoration: none; }
+  a:hover { color: var(--color-accent-600); }
+  ::-webkit-scrollbar { height: 6px; width: 6px; }
+  ::-webkit-scrollbar-thumb { background: color-mix(in srgb, #201f1d 22%, transparent); }
+  @keyframes elyaIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#f3f2f2">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f3f2f2"></rect>
+    <g fill="none" stroke="#201f1d" stroke-width="6">
+      <line x1="440" y1="250" x2="760" y2="250"></line>
+      <line x1="440" y1="550" x2="760" y2="550"></line>
+      <line x1="460" y1="215" x2="460" y2="585"></line>
+      <line x1="560" y1="215" x2="560" y2="585"></line>
+      <line x1="640" y1="215" x2="640" y2="585" stroke="#b68235" stroke-width="9"></line>
+      <line x1="740" y1="215" x2="740" y2="585"></line>
+    </g>
+    <text x="600" y="700" text-anchor="middle" font-family="Georgia, serif" font-size="84" fill="#201f1d">Élya</text>
+  </svg>
+</template>
+</helmet>
+<div ref="{{ rootRef }}" style="display: flex; min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); position: relative; overflow-x: hidden">
+
+  <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+    <aside style="width: 58px; flex: 0 0 58px; border-right: 1px solid var(--color-divider); position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 26px 0">
+      <span style="font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--color-accent-700); font-feature-settings: 'tnum'">ELYA</span>
+      <span style="writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-neutral-600)" data-en="Steel 316L — Champs-sur-Marne">Acier 316L — Champs-sur-Marne</span>
+      <span style="font-size: 11px; letter-spacing: 0.16em; color: var(--color-neutral-500); font-feature-settings: 'tnum'">MMXXVI</span>
+    </aside>
+  </sc-if>
+
+  <div style="flex: 1 1 auto; min-width: 0">
+
+    <header style="position: sticky; top: 0; z-index: 30; background: var(--color-bg); border-bottom: 1px solid var(--color-divider); display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 18px clamp(16px, 4vw, 54px) 14px; flex-wrap: wrap">
+      <a href="#" onClick="{{ goHome }}" style="font-family: var(--font-heading); font-weight: 500; font-size: clamp(19px, 2.2vw, 25px); letter-spacing: 0.02em; color: var(--color-text); line-height: 1">Élya<span style="font-family: var(--font-body); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-neutral-600); margin-left: 10px">Jewellry</span></a>
+      <nav style="display: flex; align-items: baseline; gap: clamp(14px, 2.4vw, 34px); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; flex-wrap: wrap">
+        <a href="#" onClick="{{ goCollection }}" style="color: var(--color-text)" data-en="Collection">Collection</a>
+        <a href="#" onClick="{{ goAtelier }}" style="color: var(--color-text)" data-en="Workshop">Atelier</a>
+        <a href="#" onClick="{{ goContact }}" style="color: var(--color-text)" data-en="Contact">Contact</a>
+        <span style="display: inline-flex; gap: 6px; align-items: baseline; color: var(--color-neutral-500)">
+          <a href="#" onClick="{{ setFr }}" style="color: {{ frColor }}">FR</a>
+          <span style="font-size: 10px">/</span>
+          <a href="#" onClick="{{ setEn }}" style="color: {{ enColor }}">EN</a>
+        </span>
+        <a href="#" onClick="{{ openCart }}" style="color: var(--color-accent-700); border-bottom: 1px solid var(--color-accent); padding-bottom: 2px; font-feature-settings: 'tnum'"><span data-en="Cart">Panier</span><span style="margin-left: 7px">{{ cartCount }}</span></a>
+      </nav>
+    </header>
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <main data-screen-label="Accueil">
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); align-items: end; padding: clamp(36px, 7vw, 96px) 0 0; border-bottom: 1px solid var(--color-divider)">
+          <div style="grid-column: 1 / -1; padding: 0 clamp(16px, 4vw, 54px)">
+            <p style="font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0 0 clamp(18px, 4vw, 44px); font-feature-settings: 'tnum'" data-en="Collection I — eight pieces — steel only">Collection I — huit pièces — un seul métal</p>
+            <h1 style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(66px, 15.5vw, 232px); line-height: 0.82; letter-spacing: -0.03em; margin: 0; white-space: nowrap">Acier</h1>
+            <p style="font-family: var(--font-heading); font-style: italic; font-weight: 300; font-size: clamp(28px, 6.4vw, 96px); line-height: 0.95; letter-spacing: -0.02em; margin: 0 0 clamp(22px, 4vw, 40px); padding-left: clamp(30px, 12vw, 190px); color: var(--color-neutral-800)" data-en="folded, polished, nothing else">plié, poli, rien d'autre</p>
+          </div>
+          <div style="grid-column: 1 / span 12; display: grid; grid-template-columns: repeat(12, 1fr); gap: 0; border-top: 1px solid var(--color-divider)">
+            <div style="grid-column: {{ gHomeA }}; padding: clamp(20px, 3vw, 34px) clamp(16px, 4vw, 54px); border-right: 1px solid var(--color-divider)">
+              <p style="text-align: justify; hyphens: auto; font-size: 15px; line-height: 1.62; margin: 0" data-en="Élya is a small workshop east of Paris. One material — 316L stainless steel — worked in short runs and finished by hand, piece by piece. Prices are set on the work, not on the metal.">Élya est un petit atelier à l'est de Paris. Une seule matière — l'acier inoxydable 316L — travaillée en séries courtes et finie à la main, pièce par pièce. Le prix tient au travail, pas au métal.</p>
+              <a href="#" onClick="{{ goCollection }}" style="display: inline-block; margin-top: 18px; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-bottom: 1px solid var(--color-accent); padding-bottom: 3px" data-en="See the eight pieces">Voir les huit pièces</a>
+            </div>
+            <div style="grid-column: {{ gHomeB }}; display: flex; align-items: stretch; justify-content: flex-end; padding: 0">
+              <div style="flex: 1 1 auto; max-width: 620px; border-left: 1px solid var(--color-divider); background: var(--color-surface); position: relative; min-height: clamp(260px, 42vw, 500px)">
+                <div style="position: absolute; inset: 0">{{ heroArt }}</div>
+                <span style="position: absolute; left: 16px; bottom: 14px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600); font-feature-settings: 'tnum'">Fig. 01 — Manchette Palissade</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section style="padding: clamp(28px, 5vw, 60px) 0 clamp(34px, 5vw, 70px); border-bottom: 1px solid var(--color-divider)">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; padding: 0 clamp(16px, 4vw, 54px) 20px; gap: 16px; flex-wrap: wrap">
+            <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(26px, 3.6vw, 46px); margin: 0; letter-spacing: -0.02em" data-en="The collection, in a line">La collection, en une ligne</h2>
+            <span style="font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--color-neutral-600)" data-en="Scroll →">Faites défiler →</span>
+          </div>
+          <div style="display: flex; gap: 0; overflow-x: auto; scroll-snap-type: x mandatory; border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider); padding: 0">
+            <sc-for list="{{ pieces }}" as="p" hint-placeholder-count="4">
+              <a href="#" onClick="{{ p.open }}" style="flex: 0 0 auto; width: clamp(232px, 27vw, 330px); scroll-snap-align: start; border-right: 1px solid var(--color-divider); padding: 22px 22px 24px; color: var(--color-text); display: block">
+                <span style="font-size: 11px; letter-spacing: 0.2em; color: var(--color-neutral-500); font-feature-settings: 'tnum'">{{ p.num }}</span>
+                <div style="height: clamp(210px, 24vw, 290px); margin: 14px 0 18px; background: var(--color-surface); position: relative">
+                  <div style="position: absolute; inset: 0">{{ p.art }}</div>
+                </div>
+                <h3 style="font-family: var(--font-heading); font-weight: 500; font-size: 21px; margin: 0 0 5px; letter-spacing: -0.01em">{{ p.name }}</h3>
+                <p style="font-size: 12px; color: var(--color-neutral-600); margin: 0 0 10px">{{ p.material }}</p>
+                <span style="font-size: 13px; font-feature-settings: 'tnum'; border-bottom: 1px solid var(--color-divider); padding-bottom: 2px">{{ p.priceLabel }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="background: #171614; color: #f3f2f2; position: relative; overflow: hidden; padding: clamp(52px, 9vw, 128px) clamp(16px, 4vw, 54px)">
+          <span style="position: absolute; right: clamp(-10px, 1vw, 30px); top: -0.16em; font-family: var(--font-heading); font-weight: 300; font-size: clamp(200px, 32vw, 460px); line-height: 0.8; color: rgba(182, 130, 53, 0.13); pointer-events: none; font-feature-settings: 'tnum'">II</span>
+          <div style="max-width: 780px; position: relative">
+            <p style="font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-accent-300); margin: 0 0 clamp(20px, 3vw, 34px)" data-en="The position">Le parti pris</p>
+            <p style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(25px, 3.6vw, 46px); line-height: 1.22; letter-spacing: -0.015em; margin: 0 0 26px" data-en="Steel hides nothing. It keeps the mark of the tool, the line of the fold, the direction of the polish. We took that as the design brief rather than a defect to sand away.">L'acier ne cache rien. Il garde la trace de l'outil, la ligne du pli, le sens du polissage. Nous en avons fait le sujet des pièces plutôt qu'un défaut à effacer.</p>
+            <p style="font-family: var(--font-body); font-size: 14px; line-height: 1.66; color: rgba(243, 242, 242, 0.68); max-width: 520px; text-align: justify; hyphens: auto; margin: 0" data-en="Hypoallergenic, non-tarnishing, repairable. A piece that comes back to the workshop leaves it repolished, not replaced.">Hypoallergénique, il ne noircit pas, il se répare. Une pièce qui revient à l'atelier en repart repolie, pas remplacée.</p>
+          </div>
+        </section>
+
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); border-bottom: 1px solid var(--color-divider)">
+          <div style="grid-column: {{ gTeaseA }}; padding: clamp(30px, 5vw, 68px) clamp(16px, 4vw, 54px); border-right: 1px solid var(--color-divider)">
+            <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(26px, 3.4vw, 42px); margin: 0 0 18px; letter-spacing: -0.02em" data-en="Forty square metres, one bench">Quarante mètres carrés, un établi</h2>
+            <p style="text-align: justify; hyphens: auto; font-size: 15px; line-height: 1.62; margin: 0 0 14px" data-en="Cutting, folding, filing, three polishing stages. Nothing leaves the bench before it has been worn for a day.">Découpe, pliage, limage, trois passes de polissage. Rien ne quitte l'établi avant d'avoir été porté une journée.</p>
+            <a href="#" onClick="{{ goAtelier }}" style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; border-bottom: 1px solid var(--color-accent); padding-bottom: 3px" data-en="The workshop">L'atelier</a>
+          </div>
+          <div style="grid-column: {{ gTeaseB }}; padding: clamp(30px, 5vw, 68px) clamp(16px, 4vw, 54px)">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; font-feature-settings: 'tnum'">
+              <tbody>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600); width: 46%" data-en="Material">Matière</th><td style="padding: 11px 0" data-en="316L stainless steel">Acier inoxydable 316L</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Finishes">Finitions</th><td style="padding: 11px 0" data-en="Mirror, brushed, sandblasted, gold PVD">Poli miroir, brossé, sablé, PVD or</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Runs">Séries</th><td style="padding: 11px 0" data-en="20 to 60 pieces">20 à 60 pièces</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Lead time">Délai</th><td style="padding: 11px 0" data-en="5 to 12 working days">5 à 12 jours ouvrés</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Warranty">Garantie</th><td style="padding: 11px 0" data-en="2 years, repaired at the bench">2 ans, réparation à l'atelier</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{ isCollection }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Collection" style="animation: elyaIn 0.4s ease both">
+        <section style="padding: clamp(30px, 5vw, 70px) clamp(16px, 4vw, 54px) 0">
+          <p style="font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0 0 16px" data-en="Collection I — 2026">Collection I — 2026</p>
+          <h1 style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(46px, 9vw, 128px); line-height: 0.88; letter-spacing: -0.03em; margin: 0 0 clamp(20px, 3vw, 36px)" data-en="Eight pieces">Huit pièces</h1>
+          <div style="display: flex; gap: 22px; flex-wrap: wrap; border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider); padding: 14px 0; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase">
+            <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+              <a href="#" onClick="{{ f.pick }}" style="color: {{ f.color }}; border-bottom: 1px solid {{ f.rule }}; padding-bottom: 3px">{{ f.label }}</a>
+            </sc-for>
+          </div>
+        </section>
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); gap: clamp(26px, 4vw, 62px) clamp(16px, 3vw, 40px); padding: clamp(30px, 5vw, 66px) clamp(16px, 4vw, 54px) clamp(50px, 8vw, 110px)">
+          <sc-for list="{{ shown }}" as="p" hint-placeholder-count="8">
+            <article style="grid-column: {{ p.span }}; margin-top: {{ p.offset }}">
+              <a href="#" onClick="{{ p.open }}" style="display: flex; gap: 14px; color: var(--color-text); align-items: stretch">
+                <span style="writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-neutral-500); flex: 0 0 auto; font-feature-settings: 'tnum'">{{ p.vertical }}</span>
+                <span style="flex: 1 1 auto; display: block">
+                  <span style="display: block; background: var(--color-surface); position: relative; height: {{ p.height }}; outline: 1px solid var(--color-divider); outline-offset: -1px">
+                    <span style="position: absolute; inset: 0; display: block">{{ p.art }}</span>
+                  </span>
+                  <span style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 1px solid var(--color-divider); margin-top: 12px; padding-top: 9px">
+                    <span style="display: block">
+                      <span style="display: block; font-family: var(--font-heading); font-weight: 500; font-size: 20px; letter-spacing: -0.01em">{{ p.name }}</span>
+                      <span style="display: block; font-size: 12px; color: var(--color-neutral-600); margin-top: 3px">{{ p.material }}</span>
+                    </span>
+                    <span style="font-size: 13px; font-feature-settings: 'tnum'; white-space: nowrap">{{ p.priceLabel }}</span>
+                  </span>
+                </span>
+              </a>
+            </article>
+          </sc-for>
+        </section>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Fiche produit" style="animation: elyaIn 0.4s ease both">
+        <div style="padding: 14px clamp(16px, 4vw, 54px); border-bottom: 1px solid var(--color-divider); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600)">
+          <a href="#" onClick="{{ goCollection }}" style="color: var(--color-neutral-600)" data-en="Collection">Collection</a>
+          <span style="margin: 0 10px">/</span>
+          <span style="color: var(--color-text)">{{ product.name }}</span>
+        </div>
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr)">
+          <div style="grid-column: {{ gProdA }}; border-right: 1px solid var(--color-divider); background: var(--color-surface); position: relative; min-height: clamp(320px, 54vw, 720px)">
+            <div style="position: absolute; inset: 0">{{ product.art }}</div>
+            <span style="position: absolute; left: 18px; bottom: 16px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600); font-feature-settings: 'tnum'">{{ product.figLabel }}</span>
+          </div>
+          <div style="grid-column: {{ gProdB }}; padding: clamp(26px, 4vw, 60px) clamp(16px, 4vw, 48px)">
+            <p style="font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0 0 12px; font-feature-settings: 'tnum'">{{ product.ref }}</p>
+            <h1 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(38px, 5.4vw, 76px); line-height: 0.94; letter-spacing: -0.025em; margin: 0 0 14px">{{ product.name }}</h1>
+            <p style="font-family: var(--font-heading); font-size: 24px; margin: 0 0 22px; font-feature-settings: 'tnum'">{{ product.priceLabel }}</p>
+            <p style="text-align: justify; hyphens: auto; font-size: 15px; line-height: 1.64; margin: 0 0 26px">{{ product.desc }}</p>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13px; font-feature-settings: 'tnum'; margin-bottom: 26px">
+              <tbody>
+                <sc-for list="{{ product.specs }}" as="s" hint-placeholder-count="4">
+                  <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600); width: 42%">{{ s.k }}</th><td style="padding: 10px 0">{{ s.v }}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 16px">
+              <span style="display: inline-flex; align-items: center; border: 1px solid var(--color-divider); border-radius: var(--radius-sm)">
+                <button onClick="{{ decQty }}" style="background: none; border: 0; cursor: pointer; padding: 8px 13px; font-family: var(--font-heading); font-size: 15px; color: var(--color-text)">−</button>
+                <span style="min-width: 26px; text-align: center; font-size: 14px; font-feature-settings: 'tnum'">{{ qty }}</span>
+                <button onClick="{{ incQty }}" style="background: none; border: 0; cursor: pointer; padding: 8px 13px; font-family: var(--font-heading); font-size: 15px; color: var(--color-text)">+</button>
+              </span>
+              <button class="btn btn-primary" onClick="{{ addToCart }}" style="letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; padding: 12px 22px" data-en="Add to cart">Ajouter au panier</button>
+            </div>
+            <p style="font-size: 12.5px; color: var(--color-neutral-600); line-height: 1.6; margin: 0 0 8px" data-en="Made to order in 5 to 12 working days. Free sizing, exchange within 30 days.">Fabriqué à la commande en 5 à 12 jours ouvrés. Mise à taille offerte, échange sous 30 jours.</p>
+            <a href="#" onClick="{{ goContact }}" style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; border-bottom: 1px solid var(--color-accent); padding-bottom: 3px" data-en="Ask for a variation">Demander une variante</a>
+          </div>
+        </section>
+        <section style="border-top: 1px solid var(--color-divider); padding: clamp(28px, 4vw, 58px) 0">
+          <h2 style="font-family: var(--font-heading); font-weight: 400; font-size: clamp(22px, 2.6vw, 32px); margin: 0 0 20px; padding: 0 clamp(16px, 4vw, 54px); letter-spacing: -0.02em" data-en="Same bench">Même établi
+          </h2>
+          <div style="display: flex; overflow-x: auto; border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider)">
+            <sc-for list="{{ related }}" as="p" hint-placeholder-count="3">
+              <a href="#" onClick="{{ p.open }}" style="flex: 0 0 auto; width: clamp(220px, 25vw, 300px); border-right: 1px solid var(--color-divider); padding: 20px; color: var(--color-text)">
+                <div style="height: clamp(160px, 18vw, 220px); background: var(--color-surface); position: relative; margin-bottom: 14px">
+                  <div style="position: absolute; inset: 0">{{ p.art }}</div>
+                </div>
+                <span style="display: block; font-family: var(--font-heading); font-size: 19px; font-weight: 500">{{ p.name }}</span>
+                <span style="display: block; font-size: 13px; margin-top: 4px; font-feature-settings: 'tnum'; color: var(--color-neutral-600)">{{ p.priceLabel }}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{ isAtelier }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Atelier" style="animation: elyaIn 0.4s ease both">
+        <section style="padding: clamp(30px, 5vw, 76px) clamp(16px, 4vw, 54px) 0; border-bottom: 1px solid var(--color-divider)">
+          <p style="font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--color-neutral-600); margin: 0 0 16px" data-en="The workshop">L'atelier</p>
+          <h1 style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(44px, 8.4vw, 122px); line-height: 0.88; letter-spacing: -0.03em; margin: 0 0 8px">Champs-sur-<span style="font-style: italic">Marne</span></h1>
+          <p style="font-family: var(--font-heading); font-style: italic; font-weight: 300; font-size: clamp(20px, 3vw, 38px); margin: 0 0 clamp(26px, 4vw, 54px); padding-left: clamp(20px, 8vw, 130px); color: var(--color-neutral-700)" data-en="a place of work before a shop">un lieu de travail avant d'être une boutique</p>
+        </section>
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); border-bottom: 1px solid var(--color-divider)">
+          <div style="grid-column: {{ gAtA }}; padding: clamp(28px, 4vw, 60px) clamp(16px, 4vw, 54px); border-right: 1px solid var(--color-divider)">
+            <p style="text-align: justify; hyphens: auto; font-size: 15.5px; line-height: 1.66; margin: 0 0 16px" data-en="The workshop sits at 2 allée Simone de Beauvoir in Champs-sur-Marne, Seine-et-Marne, some thirty minutes east of Paris on the RER A. Forty square metres, one bench, a rolling mill, three polishing motors.">L'atelier est au 2 allée Simone de Beauvoir, à Champs-sur-Marne, en Seine-et-Marne, à une trentaine de minutes à l'est de Paris par le RER A. Quarante mètres carrés, un établi, un laminoir, trois moteurs de polissage.</p>
+            <p style="text-align: justify; hyphens: auto; font-size: 15.5px; line-height: 1.66; margin: 0 0 16px" data-en="Every piece is designed and assembled here, by hand. Steel is cut from sheet or bar, folded cold, filed, then polished in three stages — the last one by hand, because that is where the light is decided.">Chaque pièce y est pensée et assemblée à la main. L'acier est découpé dans la tôle ou le barreau, plié à froid, limé, puis poli en trois passes — la dernière à la main, parce que c'est là que se décide la lumière.</p>
+            <p style="text-align: justify; hyphens: auto; font-size: 15.5px; line-height: 1.66; margin: 0" data-en="Visits are by appointment. There is nothing to browse: a bench, a drawer of prototypes, and whatever is being made that week.">Les visites se font sur rendez-vous. Il n'y a rien à parcourir : un établi, un tiroir de prototypes, et ce qui se fabrique cette semaine-là.</p>
+          </div>
+          <div style="grid-column: {{ gAtB }}; padding: clamp(28px, 4vw, 60px) clamp(16px, 4vw, 48px)">
+            <div style="background: var(--color-surface); position: relative; height: clamp(220px, 28vw, 340px); outline: 1px solid var(--color-divider); outline-offset: -1px; margin-bottom: 22px">
+              <div style="position: absolute; inset: 0">{{ atelierArt }}</div>
+              <span style="position: absolute; left: 14px; bottom: 12px; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600)" data-en="Fig. 09 — Bench, plan view">Fig. 09 — Établi, vue de dessus</span>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; font-feature-settings: 'tnum'">
+              <tbody>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600); width: 44%" data-en="Address">Adresse</th><td style="padding: 10px 0">2 allée Simone de Beauvoir<br>77420 Champs-sur-Marne</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600)" data-en="Access">Accès</th><td style="padding: 10px 0" data-en="RER A — Noisy-Champs, 8 min walk">RER A — Noisy-Champs, 8 min à pied</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600)" data-en="Visits">Visites</th><td style="padding: 10px 0" data-en="By appointment, Thu–Sat">Sur rendez-vous, jeu.–sam.</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600)" data-en="Since">Depuis</th><td style="padding: 10px 0">2021</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </sc-if>
+
+    <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Contact" style="animation: elyaIn 0.4s ease both">
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); min-height: 60vh">
+          <div style="grid-column: {{ gConA }}; padding: clamp(30px, 5vw, 76px) clamp(16px, 4vw, 54px); border-right: 1px solid var(--color-divider)">
+            <h1 style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(40px, 6.6vw, 96px); line-height: 0.9; letter-spacing: -0.03em; margin: 0 0 18px" data-en="Write to us">Écrivez-nous</h1>
+            <p style="font-size: 15px; line-height: 1.62; max-width: 420px; margin: 0 0 clamp(24px, 3vw, 40px)" data-en="Sizing, a variation, a commission, a repair. One person reads these, usually within two working days.">Une taille, une variante, une commande sur mesure, une réparation. Une seule personne lit ces messages, en général sous deux jours ouvrés.</p>
+            <form onSubmit="{{ submitForm }}" style="max-width: 460px; display: flex; flex-direction: column; gap: 16px">
+              <label class="field" style="display: block"><span style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 7px" data-en="Name">Nom</span><input class="input" style="width: 100%; box-sizing: border-box" placeholder=""></label>
+              <label class="field" style="display: block"><span style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 7px" data-en="Email">E-mail</span><input class="input" type="email" style="width: 100%; box-sizing: border-box"></label>
+              <label class="field" style="display: block"><span style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600); margin-bottom: 7px" data-en="Message">Message</span><textarea class="input" rows="5" style="width: 100%; box-sizing: border-box; font-family: var(--font-body); resize: vertical"></textarea></label>
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap">
+                <button class="btn btn-primary" type="submit" style="letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; padding: 12px 22px" data-en="Send">Envoyer</button>
+                <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+                  <span style="font-size: 12.5px; color: var(--color-accent-700)" data-en="Received — mockup, nothing is sent.">Reçu — maquette, rien n'est envoyé.</span>
+                </sc-if>
+              </div>
+            </form>
+          </div>
+          <div style="grid-column: {{ gConB }}; padding: clamp(30px, 5vw, 76px) clamp(16px, 4vw, 54px)">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; max-width: 460px">
+              <tbody>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600); width: 40%" data-en="Workshop">Atelier</th><td style="padding: 11px 0">2 allée Simone de Beauvoir<br>77420 Champs-sur-Marne</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Email">E-mail</th><td style="padding: 11px 0">atelier@elya.fr</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Phone">Téléphone</th><td style="padding: 11px 0; font-feature-settings: 'tnum'">+33 1 60 95 00 00</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider)"><th style="text-align: left; font-weight: 400; padding: 11px 0; color: var(--color-neutral-600)" data-en="Appointments">Rendez-vous</th><td style="padding: 11px 0" data-en="Thu–Sat, 10:00–18:00">Jeu.–sam., 10h–18h</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </sc-if>
+
+    <footer style="border-top: 1px solid var(--color-divider); padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 54px); display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-neutral-600)">
+      <span data-en="Élya Jewellry — 316L steel — Champs-sur-Marne">Élya Jewellry — acier 316L — Champs-sur-Marne</span>
+      <span style="display: flex; gap: 20px; flex-wrap: wrap">
+        <a href="#" onClick="{{ goCollection }}" style="color: var(--color-neutral-600)" data-en="Collection">Collection</a>
+        <a href="#" onClick="{{ goAtelier }}" style="color: var(--color-neutral-600)" data-en="Workshop">Atelier</a>
+        <a href="#" onClick="{{ goContact }}" style="color: var(--color-neutral-600)">Contact</a>
+        <span style="font-feature-settings: 'tnum'">© 2026</span>
+      </span>
+    </footer>
+  </div>
+
+  <sc-if value="{{ cartOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 60; display: flex; justify-content: flex-end; background: rgba(23, 22, 20, 0.28)">
+      <div onClick="{{ closeCart }}" style="flex: 1 1 auto"></div>
+      <div style="width: min(400px, 92vw); background: var(--color-bg); border-left: 1px solid var(--color-divider); padding: 24px clamp(18px, 3vw, 30px); overflow-y: auto; box-shadow: var(--shadow-lg)">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--color-divider); padding-bottom: 12px; margin-bottom: 18px">
+          <span style="font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase" data-en="Cart">Panier</span>
+          <a href="#" onClick="{{ closeCart }}" style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-600)" data-en="Close">Fermer</a>
+        </div>
+        <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+          <p style="font-size: 14px; color: var(--color-neutral-600); margin: 0" data-en="Empty for now.">Vide pour l'instant.</p>
+        </sc-if>
+        <sc-for list="{{ cartLines }}" as="l" hint-placeholder-count="2">
+          <div style="display: flex; gap: 14px; border-bottom: 1px solid var(--color-divider); padding-bottom: 14px; margin-bottom: 14px">
+            <div style="width: 66px; height: 84px; flex: 0 0 auto; background: var(--color-surface); position: relative">
+              <div style="position: absolute; inset: 0">{{ l.art }}</div>
+            </div>
+            <div style="flex: 1 1 auto; min-width: 0">
+              <p style="font-family: var(--font-heading); font-size: 18px; font-weight: 500; margin: 0 0 3px">{{ l.name }}</p>
+              <p style="font-size: 12px; color: var(--color-neutral-600); margin: 0 0 8px">{{ l.material }}</p>
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px">
+                <span style="display: inline-flex; align-items: center; border: 1px solid var(--color-divider)">
+                  <button onClick="{{ l.dec }}" style="background: none; border: 0; cursor: pointer; padding: 4px 9px; font-family: var(--font-heading); color: var(--color-text)">−</button>
+                  <span style="min-width: 20px; text-align: center; font-size: 13px; font-feature-settings: 'tnum'">{{ l.qty }}</span>
+                  <button onClick="{{ l.inc }}" style="background: none; border: 0; cursor: pointer; padding: 4px 9px; font-family: var(--font-heading); color: var(--color-text)">+</button>
+                </span>
+                <span style="font-size: 13px; font-feature-settings: 'tnum'">{{ l.lineTotal }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--color-text); padding-top: 12px; margin-top: 4px">
+          <span style="font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase" data-en="Total">Total</span>
+          <span style="font-family: var(--font-heading); font-size: 22px; font-feature-settings: 'tnum'">{{ cartTotal }}</span>
+        </div>
+        <button class="btn btn-primary btn-block" style="margin-top: 18px; letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; padding: 13px" data-en="Checkout">Passer commande</button>
+        <p style="font-size: 11.5px; color: var(--color-neutral-500); margin: 12px 0 0; line-height: 1.55" data-en="Mockup — no payment is processed.">Maquette — aucun paiement n'est traité.</p>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#b68235&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#b68235&quot;,&quot;#8a8f7a&quot;,&quot;#7d5411&quot;,&quot;#2d2b2b&quot;],&quot;section&quot;:&quot;Identité&quot;}}">
+const PIECES = [
+  { id: 'faille',   name: 'Bague Faille',        cat: 'main',    ref: 'ELY—01',
+    material: 'Acier 316L poli miroir', materialEn: '316L steel, mirror polish', price: 145, glyph: 'fold',
+    desc: "Un anneau ouvert d'un seul tenant, plié à froid puis poli jusqu'à ce que la faille se lise comme une ligne de lumière. La fente se règle d'un demi-millimètre à la main.",
+    descEn: 'A single open band, cold-folded then polished until the split reads as a line of light. The gap is set by hand, half a millimetre at a time.',
+    specs: [['Largeur', 'Width', '4,2 mm'], ['Poids', 'Weight', '6,1 g'], ['Tailles', 'Sizes', '48 à 60'], ['Finition', 'Finish', 'Poli miroir / Mirror']] },
+  { id: 'palissade', name: 'Manchette Palissade', cat: 'poignet', ref: 'ELY—02',
+    material: 'Acier brossé, pliage à froid', materialEn: 'Brushed steel, cold-folded', price: 240, glyph: 'bars',
+    desc: "Sept montants parallèles tenus par deux traverses. Rigide au poignet, souple à l'ouverture. Le brossé est tiré dans un seul sens, celui du bras.",
+    descEn: 'Seven parallel uprights held by two crossbars. Rigid on the wrist, flexible at the opening. The brushing runs one way only — the way of the arm.',
+    specs: [['Hauteur', 'Height', '32 mm'], ['Poids', 'Weight', '41 g'], ['Tour', 'Circumference', '15,5 à 18 cm'], ['Finition', 'Finish', 'Brossé / Brushed']] },
+  { id: 'contrejour', name: 'Boucles Contre-jour', cat: 'oreilles', ref: 'ELY—03',
+    material: 'Acier 316L, PVD or', materialEn: '316L steel, gold PVD', price: 130, glyph: 'arcs',
+    desc: "Deux arcs décalés qui ne se ferment jamais tout à fait. Le PVD or est appliqué sur la face interne : la couleur n'apparaît que de trois quarts.",
+    descEn: 'Two offset arcs that never quite close. The gold PVD sits on the inner face, so the colour only shows at three-quarters.',
+    specs: [['Diamètre', 'Diameter', '34 mm'], ['Poids', 'Weight', '3,4 g / unité'], ['Attache', 'Fitting', 'Tige acier / Steel post'], ['Finition', 'Finish', 'PVD or / Gold PVD']] },
+  { id: 'lignedefuite', name: 'Collier Ligne de Fuite', cat: 'cou', ref: 'ELY—04',
+    material: 'Acier sablé, chaîne 45 cm', materialEn: 'Sandblasted steel, 45 cm chain', price: 185, glyph: 'chain',
+    desc: "Une plaque effilée qui suit la clavicule au lieu de pendre. Le sablé retient la lumière au lieu de la renvoyer ; il se patine sans se marquer.",
+    descEn: 'A tapered plate that follows the collarbone instead of hanging from it. The sandblasted face holds light rather than throwing it back.',
+    specs: [['Longueur', 'Length', '45 cm réglable'], ['Plaque', 'Plate', '58 × 7 mm'], ['Poids', 'Weight', '12 g'], ['Finition', 'Finish', 'Sablé / Sandblasted']] },
+  { id: 'serrure',  name: 'Bague Serrure',        cat: 'main',    ref: 'ELY—05',
+    material: 'Double anneau, acier poli', materialEn: 'Double band, polished steel', price: 160, glyph: 'ring',
+    desc: "Deux anneaux qui tournent l'un dans l'autre et s'alignent en une seule position. On la porte pour ce geste autant que pour la pièce.",
+    descEn: 'Two bands that turn within one another and line up in a single position. It is worn as much for that gesture as for the object.',
+    specs: [['Largeur', 'Width', '7 mm assemblé'], ['Poids', 'Weight', '9,3 g'], ['Tailles', 'Sizes', '50 à 62'], ['Finition', 'Finish', 'Poli / Polished']] },
+  { id: 'echo',     name: 'Créoles Écho',         cat: 'oreilles', ref: 'ELY—06',
+    material: 'Acier 316L brossé, ø 28 mm', materialEn: 'Brushed 316L steel, ø 28 mm', price: 110, glyph: 'disc',
+    desc: "Créole à section carrée : de face un trait, de profil un volume. Fermeture à cliquet usinée dans la même barre.",
+    descEn: 'A hoop of square section: a line from the front, a volume from the side. The click closure is machined from the same bar.',
+    specs: [['Diamètre', 'Diameter', '28 mm'], ['Section', 'Section', '2,5 mm carré'], ['Poids', 'Weight', '4,8 g / unité'], ['Finition', 'Finish', 'Brossé / Brushed']] },
+  { id: 'etau',     name: 'Bracelet Étau',        cat: 'poignet', ref: 'ELY—07',
+    material: 'Acier plié à froid, sans soudure', materialEn: 'Cold-folded steel, no solder', price: 210, glyph: 'clamp',
+    desc: "Une seule bande refermée sur elle-même, sans soudure ni charnière. La tension du métal fait la fermeture ; elle se règle à la main, une fois.",
+    descEn: 'A single band closed on itself, with no solder and no hinge. The tension of the metal is the clasp; it is set by hand, once.',
+    specs: [['Largeur', 'Width', '11 mm'], ['Poids', 'Weight', '28 g'], ['Tour', 'Circumference', '16 à 19 cm'], ['Finition', 'Finish', 'Poli mat / Satin']] },
+  { id: 'rivet',    name: 'Piercing Rivet',       cat: 'oreilles', ref: 'ELY—08',
+    material: 'Acier chirurgical, filetage interne', materialEn: 'Surgical steel, internal thread', price: 95, glyph: 'stud',
+    desc: "Une tête plate et un filetage interne, rien qui accroche. Dessiné pour être posé et oublié — hélix, lobe ou conque.",
+    descEn: 'A flat head and an internal thread, nothing to catch. Designed to be fitted and forgotten — helix, lobe or conch.',
+    specs: [['Tête', 'Head', '4 mm'], ['Barre', 'Bar', '1,2 mm × 8 mm'], ['Poids', 'Weight', '0,6 g'], ['Finition', 'Finish', 'Poli miroir / Mirror']] },
+];
+
+const LAYOUT = {
+  faille:      { span: '1 / span 5', offset: '0px',    height: 'clamp(300px, 34vw, 480px)' },
+  palissade:   { span: '7 / span 6', offset: 'clamp(30px, 6vw, 110px)', height: 'clamp(240px, 26vw, 360px)' },
+  contrejour:  { span: '2 / span 4', offset: '0px',    height: 'clamp(220px, 24vw, 330px)' },
+  lignedefuite:{ span: '7 / span 5', offset: '0px',    height: 'clamp(300px, 32vw, 450px)' },
+  serrure:     { span: '1 / span 4', offset: 'clamp(20px, 4vw, 70px)', height: 'clamp(220px, 24vw, 320px)' },
+  echo:        { span: '6 / span 3', offset: '0px',    height: 'clamp(200px, 20vw, 270px)' },
+  etau:        { span: '9 / span 4', offset: 'clamp(30px, 5vw, 90px)', height: 'clamp(240px, 26vw, 350px)' },
+  rivet:       { span: '3 / span 4', offset: '0px',    height: 'clamp(200px, 22vw, 300px)' },
+};
+
+const FILTERS = [
+  { key: 'tout', fr: 'Tout', en: 'All' },
+  { key: 'main', fr: 'Bagues', en: 'Rings' },
+  { key: 'oreilles', fr: 'Oreilles', en: 'Ears' },
+  { key: 'cou', fr: 'Cou', en: 'Neck' },
+  { key: 'poignet', fr: 'Poignet', en: 'Wrist' },
+];
+
+class Component extends DCLogic {
+  state = { route: 'home', productId: 'palissade', lang: 'fr', cart: {}, cartOpen: false, qty: 1, filter: 'tout', sent: false, wide: true };
+
+  constructor(props) {
+    super(props);
+    this.rootRef = React.createRef();
+  }
+
+  componentDidMount() {
+    this.onResize = () => {
+      const w = window.innerWidth >= 900;
+      if (w !== this.state.wide) this.setState({ wide: w });
+    };
+    this.onResize();
+    window.addEventListener('resize', this.onResize);
+    this.applyTheme();
+    this.swapLang();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  componentDidUpdate() { this.applyTheme(); this.swapLang(); }
+
+  applyTheme() {
+    const r = this.rootRef.current;
+    if (!r) return;
+    const a = this.props.accent;
+    if (a) { r.style.setProperty('--color-accent', a); r.style.setProperty('--color-accent-700', a); }
+  }
+
+  swapLang() {
+    const r = this.rootRef.current;
+    if (!r) return;
+    const en = this.state.lang === 'en';
+    r.querySelectorAll('[data-en]').forEach(n => {
+      if (!n.dataset.fr) n.dataset.fr = n.innerHTML;
+      const want = en ? n.dataset.en : n.dataset.fr;
+      if (n.innerHTML !== want) n.innerHTML = want;
+    });
+  }
+
+  euro(n) { return n.toLocaleString('fr-FR') + ' €'; }
+
+  art(glyph) {
+    const ink = 'var(--color-neutral-800)', gold = 'var(--color-accent)', h = React.createElement;
+    const el = (t, p) => h(t, Object.assign({ fill: 'none', stroke: ink, strokeWidth: 1, vectorEffect: 'non-scaling-stroke' }, p));
+    const G = {
+      fold: [
+        el('polyline', { key: 'a', points: '70,400 160,140 250,340 330,120', strokeWidth: 1.4 }),
+        el('line', { key: 'b', x1: 70, y1: 400, x2: 330, y2: 120, stroke: gold, strokeWidth: 1.2 }),
+        el('circle', { key: 'c', cx: 250, cy: 340, r: 5, stroke: gold }),
+      ],
+      bars: [
+        el('line', { key: 'x1', x1: 60, y1: 170, x2: 340, y2: 170 }),
+        el('line', { key: 'x2', x1: 60, y1: 370, x2: 340, y2: 370 }),
+        ...[0, 1, 2, 3, 4, 5, 6].map(i => el('line', { key: 'v' + i, x1: 70 + i * 43, y1: 150, x2: 70 + i * 43, y2: 390, stroke: i === 3 ? gold : ink, strokeWidth: i === 3 ? 1.4 : 1 })),
+      ],
+      arcs: [
+        el('path', { key: 'a', d: 'M 120 380 A 100 100 0 1 1 280 380', strokeWidth: 1.3 }),
+        el('path', { key: 'b', d: 'M 150 400 A 78 78 0 1 1 300 340', stroke: gold, strokeWidth: 1.3 }),
+        el('line', { key: 'c', x1: 60, y1: 400, x2: 340, y2: 400, strokeWidth: 0.6 }),
+      ],
+      chain: [
+        ...[0, 1, 2, 3, 4].map(i => el('ellipse', { key: 'e' + i, cx: 200, cy: 130 + i * 55, rx: 30, ry: 20, transform: 'rotate(' + (i % 2 ? 14 : -14) + ' 200 ' + (130 + i * 55) + ')' })),
+        el('path', { key: 'p', d: 'M 172 405 L 200 470 L 228 405', stroke: gold, strokeWidth: 1.3 }),
+      ],
+      ring: [
+        el('circle', { key: 'a', cx: 200, cy: 260, r: 104 }),
+        el('circle', { key: 'b', cx: 200, cy: 260, r: 78 }),
+        el('circle', { key: 'c', cx: 200, cy: 260, r: 112, stroke: gold, strokeDasharray: '2 7' }),
+        el('line', { key: 'd', x1: 200, y1: 148, x2: 200, y2: 372, strokeWidth: 0.6 }),
+      ],
+      disc: [
+        el('circle', { key: 'a', cx: 168, cy: 260, r: 92 }),
+        el('circle', { key: 'b', cx: 232, cy: 260, r: 92, stroke: gold }),
+        el('line', { key: 'c', x1: 60, y1: 260, x2: 340, y2: 260, strokeWidth: 0.6 }),
+      ],
+      clamp: [
+        el('path', { key: 'a', d: 'M 130 150 A 110 110 0 1 0 130 370', strokeWidth: 1.4 }),
+        el('path', { key: 'b', d: 'M 154 178 A 82 82 0 1 0 154 342' }),
+        el('line', { key: 'c', x1: 130, y1: 150, x2: 154, y2: 178, stroke: gold, strokeWidth: 1.3 }),
+        el('line', { key: 'd', x1: 130, y1: 370, x2: 154, y2: 342, stroke: gold, strokeWidth: 1.3 }),
+      ],
+      stud: [
+        el('circle', { key: 'a', cx: 200, cy: 210, r: 34 }),
+        el('circle', { key: 'b', cx: 200, cy: 210, r: 12, stroke: gold }),
+        el('line', { key: 'c', x1: 200, y1: 244, x2: 200, y2: 400 }),
+        el('line', { key: 'd', x1: 186, y1: 400, x2: 214, y2: 400, strokeWidth: 1.4 }),
+      ],
+      bench: [
+        el('rect', { key: 'a', x: 50, y: 120, width: 300, height: 280 }),
+        el('line', { key: 'b', x1: 50, y1: 200, x2: 350, y2: 200, strokeWidth: 0.6 }),
+        el('line', { key: 'c', x1: 210, y1: 200, x2: 210, y2: 400, strokeWidth: 0.6 }),
+        el('circle', { key: 'd', cx: 130, cy: 300, r: 42, stroke: gold }),
+        el('line', { key: 'e', x1: 250, y1: 240, x2: 320, y2: 360 }),
+        el('line', { key: 'f', x1: 320, y1: 240, x2: 250, y2: 360 }),
+      ],
+    };
+    return React.createElement('svg', { viewBox: '0 0 400 520', preserveAspectRatio: 'xMidYMid meet', width: '100%', height: '100%', style: { display: 'block' }, 'aria-hidden': 'true' }, G[glyph] || G.ring);
+  }
+
+  decorate(p, i) {
+    const en = this.state.lang === 'en';
+    const L = LAYOUT[p.id];
+    return {
+      id: p.id, name: p.name, cat: p.cat, ref: p.ref,
+      material: en ? p.materialEn : p.material,
+      desc: en ? p.descEn : p.desc,
+      priceLabel: this.euro(p.price),
+      num: String(i + 1).padStart(2, '0'),
+      vertical: String(i + 1).padStart(2, '0') + ' — ' + p.ref,
+      figLabel: 'Fig. ' + String(i + 1).padStart(2, '0') + ' — ' + (en ? p.materialEn : p.material),
+      specs: p.specs.map(s => ({ k: en ? s[1] : s[0], v: s[2] })),
+      span: this.state.wide ? L.span : '1 / -1',
+      offset: this.state.wide ? L.offset : '0px',
+      height: L.height,
+      art: this.art(p.glyph),
+      open: (e) => { e.preventDefault(); this.setState({ route: 'product', productId: p.id, qty: 1 }); window.scrollTo(0, 0); },
+    };
+  }
+
+  nav(route) { return (e) => { if (e) e.preventDefault(); this.setState({ route, cartOpen: false }); window.scrollTo(0, 0); }; }
+
+  renderVals() {
+    const s = this.state;
+    const en = s.lang === 'en';
+    const all = PIECES.map((p, i) => this.decorate(p, i));
+    const byId = {};
+    all.forEach(p => { byId[p.id] = p; });
+    const product = byId[s.productId] || all[0];
+    const lines = Object.keys(s.cart).filter(k => s.cart[k] > 0).map(k => {
+      const raw = PIECES.find(p => p.id === k);
+      return {
+        name: raw.name, material: en ? raw.materialEn : raw.material, qty: s.cart[k],
+        lineTotal: this.euro(raw.price * s.cart[k]), art: this.art(raw.glyph),
+        inc: () => this.setState(st => ({ cart: Object.assign({}, st.cart, { [k]: st.cart[k] + 1 }) })),
+        dec: () => this.setState(st => ({ cart: Object.assign({}, st.cart, { [k]: Math.max(0, st.cart[k] - 1) }) })),
+      };
+    });
+    const total = Object.keys(s.cart).reduce((t, k) => t + (PIECES.find(p => p.id === k).price * s.cart[k]), 0);
+
+    const col = (a, b) => (s.wide ? a + ' / span ' + b : '1 / -1');
+
+    return {
+      rootRef: this.rootRef,
+      wide: s.wide,
+      gHomeA: col(1, 5), gHomeB: col(6, 7),
+      gTeaseA: col(1, 6), gTeaseB: col(7, 6),
+      gProdA: col(1, 7), gProdB: col(8, 5),
+      gAtA: col(1, 7), gAtB: col(8, 5),
+      gConA: col(1, 6), gConB: col(7, 6),
+      isHome: s.route === 'home', isCollection: s.route === 'collection',
+      isProduct: s.route === 'product', isAtelier: s.route === 'atelier', isContact: s.route === 'contact',
+      pieces: all,
+      shown: s.filter === 'tout' ? all : all.filter(p => p.cat === s.filter),
+      product, qty: s.qty, sent: s.sent,
+      related: all.filter(p => p.id !== product.id).slice(0, 4),
+      heroArt: this.art('bars'), atelierArt: this.art('bench'),
+      filters: FILTERS.map(f => ({
+        label: en ? f.en : f.fr,
+        color: s.filter === f.key ? 'var(--color-text)' : 'var(--color-neutral-500)',
+        rule: s.filter === f.key ? 'var(--color-accent)' : 'transparent',
+        pick: (e) => { e.preventDefault(); this.setState({ filter: f.key }); },
+      })),
+      frColor: en ? 'var(--color-neutral-500)' : 'var(--color-text)',
+      enColor: en ? 'var(--color-text)' : 'var(--color-neutral-500)',
+      setFr: (e) => { e.preventDefault(); this.setState({ lang: 'fr' }); },
+      setEn: (e) => { e.preventDefault(); this.setState({ lang: 'en' }); },
+      goHome: this.nav('home'), goCollection: this.nav('collection'),
+      goAtelier: this.nav('atelier'), goContact: this.nav('contact'),
+      incQty: () => this.setState(st => ({ qty: st.qty + 1 })),
+      decQty: () => this.setState(st => ({ qty: Math.max(1, st.qty - 1) })),
+      addToCart: () => this.setState(st => ({ cart: Object.assign({}, st.cart, { [st.productId]: (st.cart[st.productId] || 0) + st.qty }), cartOpen: true })),
+      openCart: (e) => { e.preventDefault(); this.setState({ cartOpen: true }); },
+      closeCart: (e) => { if (e) e.preventDefault(); this.setState({ cartOpen: false }); },
+      cartOpen: s.cartOpen,
+      cartCount: Object.keys(s.cart).reduce((t, k) => t + s.cart[k], 0),
+      cartEmpty: lines.length === 0,
+      cartLines: lines,
+      cartTotal: this.euro(total),
+      submitForm: (e) => { e.preventDefault(); this.setState({ sent: true }); },
+    };
+  }
+}
+</script>
+</body>
+</html>
