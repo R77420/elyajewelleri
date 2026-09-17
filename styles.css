@@ -1117,6 +1117,28 @@ header > nav {
   }
 }
 
+/* ÉCART CONNU ET ASSUMÉ — ordre de tabulation en portrait.
+   Le order: 1 ci-dessus déplace le nav visuellement, jamais dans le DOM. En
+   portrait la tabulation fait donc un pas en arrière : EN (bas à droite) puis
+   Panier (haut à droite). Un seul pas, entre deux éléments distants de 42 px et
+   visibles ensemble dans l'en-tête collant.
+
+   Ce n'est pas un oubli. À 375 px, le nav et le panier réclament 393 px sur une
+   ligne pour 343 disponibles : une mise en page à deux rangées qui préserve
+   l'ordre est arithmétiquement impossible à cette largeur. Placer le panier
+   avant le nav dans le DOM corrigerait le portrait et casserait le desktop, où
+   les utilisateurs au clavier sont bien plus nombreux.
+
+   Le desktop, lui, est strictement aligné (vérifié). Les lecteurs d'écran
+   suivent le DOM et entendent marque → navigation → panier, ce qui reste
+   l'ordre qui a du sens. Arbitrage retenu : 32 px de viewport rendus à chaque
+   visiteur mobile valent ce pas de focus.
+
+   Ce qui le résoudrait vraiment : sortir FR/EN de l'en-tête. C'est un réglage,
+   pas une destination, et sans lui marque / liens + panier tiennent en deux
+   rangées dans l'ordre du DOM. C'est un déplacement de fonctionnalité, pas une
+   adaptation — à décider séparément. */
+
 /* ── Cibles tactiles ───────────────────────────────────────────────────────
    Les contrôles mesurent 14 à 23 px de haut : c'est la typographie du système,
    et §3 la fixe. On n'y touche pas. On agrandit la zone atteignable sans
