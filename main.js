@@ -97,7 +97,7 @@
   function paintLangToggle() {
     $$('[data-lang]').forEach(function (a) {
       var on = a.getAttribute('data-lang') === lang;
-      a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-500)';
+      a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-700)';
     });
   }
 
@@ -148,7 +148,7 @@
 
     var body = el('div', 'flex: 1 1 auto; min-width: 0');
     body.appendChild(el('p', 'font-family: var(--font-heading); font-size: 18px; font-weight: 500; margin: 0 0 3px', p.name));
-    var mat = el('p', 'font-size: 12px; color: var(--color-neutral-600); margin: 0 0 8px', isEn() ? p.materialEn : p.material);
+    var mat = el('p', 'font-size: 12px; color: var(--color-neutral-700); margin: 0 0 8px', isEn() ? p.materialEn : p.material);
     mat.setAttribute('data-en', p.materialEn);
     mat.dataset.fr = p.material;
     body.appendChild(mat);
@@ -231,7 +231,7 @@
     specs.textContent = '';
     p.specs.forEach(function (s) {
       var tr = el('tr', 'border-top: 1px solid var(--color-divider)');
-      var th = el('th', 'text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-600); width: 42%', en ? s[1] : s[0]);
+      var th = el('th', 'text-align: left; font-weight: 400; padding: 10px 0; color: var(--color-neutral-700); width: 42%', en ? s[1] : s[0]);
       th.setAttribute('data-en', s[1]);
       th.dataset.fr = s[0];
       tr.appendChild(th);
@@ -256,7 +256,7 @@
         box.appendChild(inner);
         a.appendChild(box);
         a.appendChild(el('span', 'display: block; font-family: var(--font-heading); font-size: 19px; font-weight: 500', q.name));
-        a.appendChild(el('span', "display: block; font-size: 13px; margin-top: 4px; font-feature-settings: 'tnum'; color: var(--color-neutral-600)", euro(q.price)));
+        a.appendChild(el('span', "display: block; font-size: 13px; margin-top: 4px; font-feature-settings: 'tnum'; color: var(--color-neutral-700)", euro(q.price)));
         related.appendChild(a);
       });
     }
@@ -269,7 +269,7 @@
   function applyFilter(key) {
     $$('[data-filter]').forEach(function (a) {
       var on = a.getAttribute('data-filter') === key;
-      a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-500)';
+      a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-700)';
       a.style.borderBottom = '1px solid ' + (on ? 'var(--color-accent)' : 'transparent');
       if (on) a.setAttribute('data-active', ''); else a.removeAttribute('data-active');
     });

@@ -342,7 +342,10 @@ figcaption {
 }
 .btn svg { display: block; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn-primary { color: var(--color-accent); border-color: var(--color-accent); }
+/* Le trait reste le laiton de marque ; le libellé descend à l'échelon 700.
+   #b68235 ne mesure que 3,02:1 — assez pour une bordure d'1px, pas pour du
+   texte de 14px. La règle générale : le laiton trace, l'échelon 700 écrit. */
+.btn-primary { color: var(--color-accent-700); border-color: var(--color-accent); }
 .btn-primary:hover { background: color-mix(in srgb, var(--color-accent) 12%, transparent); }
 .btn-primary:active { background: color-mix(in srgb, var(--color-accent) 22%, transparent); }
 .btn-secondary { border-color: var(--color-divider); }
@@ -361,7 +364,7 @@ figcaption {
 }
 .input {
   width: 100%; min-height: 36px; padding: 6px 10px; font: inherit;
-  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent);
+  font-size: 14px; color: var(--color-text); caret-color: var(--color-accent-700);
   background: transparent;
   border: 1px solid var(--color-divider); border-radius: var(--radius-md);
 }
@@ -934,7 +937,10 @@ textarea.input { min-height: 90px; resize: vertical; }
   html { -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: #f3f2f2; }
   a { color: var(--color-accent-700); text-decoration: none; }
-  a:hover { color: var(--color-accent-600); }
+  /* Le survol descend la rampe au lieu de la remonter : l'échelon 600 (#a06f24)
+     ne mesure que 3,92:1 sur le fond, sous le seuil AA que l'état au repos
+     respecte. Un lien ne doit pas devenir moins lisible quand on le vise. */
+  a:hover { color: var(--color-accent-800); }
   ::-webkit-scrollbar { height: 6px; width: 6px; }
   ::-webkit-scrollbar-thumb { background: color-mix(in srgb, #201f1d 22%, transparent); }
   @keyframes elyaIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
@@ -960,3 +966,36 @@ header nav a[data-active] {
 /* Le tiroir du panier porte un display: flex inline, qui l'emporterait sur le
    display: none que le navigateur applique à [hidden]. */
 [hidden] { display: none !important; }
+
+/* ── Surfaces dessinées par le navigateur ──────────────────────────────────
+   Anneau de focus, sélection de texte, curseur de saisie et ascenseurs
+   arrivaient avec les valeurs par défaut du navigateur, qui n'appartiennent à
+   aucun système. On les tire de la palette pour qu'ils soient identiques d'un
+   navigateur à l'autre, au lieu de dépendre de ce que chacun décide. */
+
+:focus-visible {
+  /* L'échelon 700 mesure 5,97:1 sur le fond ; le laiton de marque (#b68235)
+     n'atteint que 3,02:1, soit deux centièmes au-dessus du minimum exigé d'un
+     indicateur de focus. Même famille, marge réelle. */
+  outline: 2px solid var(--color-accent-700);
+  outline-offset: 2px;
+}
+
+/* §2 réserve le laiton au trait et interdit son usage en aplat : la sélection
+   reste donc sur la rampe neutre. */
+::selection {
+  background: var(--color-neutral-300);
+  color: var(--color-text);
+}
+
+/* .input porte déjà son caret ; ceci couvre les champs sans la classe. */
+input,
+textarea {
+  caret-color: var(--color-accent-700);
+}
+
+/* Parité Firefox avec la règle ::-webkit-scrollbar ci-dessus. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, #201f1d 22%, transparent) transparent;
+}
