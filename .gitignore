@@ -1,3 +1,9 @@
 node_modules
 .DS_Store
 .vercel
+
+# outillage agent (volumineux, propre a la machine)
+.claude/
+.opencode/
+.impeccable/
+skills-lock.json

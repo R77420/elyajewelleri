@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Élya Jewellry</title>
+  <meta name="description" content="Une taille, une variante, une commande sur mesure ou une réparation : écrivez à l'atelier, réponse sous deux jours ouvrés.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#contenu" data-skip data-en="Skip to content">Aller au contenu</a>
+  <div style="display: flex; min-height: 100vh; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); position: relative; overflow-x: hidden;">
+    <aside aria-hidden="true" style="width: 58px; flex: 0 0 58px; border-right: 1px solid var(--color-divider); position: sticky; top: 0px; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 26px 0px;" data-rail="">
+      <span style="font-family: var(--font-heading); font-size: 12px; letter-spacing: 0.34em; text-transform: uppercase; color: var(--color-accent-700); font-feature-settings: &quot;tnum&quot;;">ELYA</span>
+      <span data-en="Steel 316L — Champs-sur-Marne" style="writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-neutral-700);">Acier 316L — Champs-sur-Marne</span>
+      <span style="font-size: 11px; letter-spacing: 0.16em; color: var(--color-neutral-700); font-feature-settings: &quot;tnum&quot;;">MMXXVI</span>
+    </aside>
+    <div style="flex: 1 1 auto; min-width: 0px;">
+      <header style="position: sticky; top: 0px; z-index: 30; background: var(--color-bg); border-bottom: 1px solid var(--color-divider); display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 18px clamp(16px, 4vw, 54px) 14px; flex-wrap: wrap;">
+        <a href="index.html" style="font-family: var(--font-heading); font-weight: 500; font-size: clamp(19px, 2.2vw, 25px); letter-spacing: 0.02em; color: var(--color-text); line-height: 1;">Élya<span style="font-family: var(--font-body); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--color-neutral-700); margin-left: 10px;">Jewellry</span></a>
+        <nav style="display: flex; align-items: baseline; gap: clamp(14px, 2.4vw, 34px); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; flex-wrap: wrap;">
+          <a href="collection.html" data-en="Collection" style="color: var(--color-text);" data-nav="collection">Collection</a>
+          <a href="atelier.html" data-en="Workshop" style="color: var(--color-text);" data-nav="atelier">Atelier</a>
+          <a href="contact.html" data-en="Contact" style="color: var(--color-text);" data-nav="contact" data-active="" aria-current="page">Contact</a>
+          <span style="display: inline-flex; gap: 6px; align-items: baseline; color: var(--color-neutral-700);">
+            <button type="button" class="as-link" style="color: var(--color-text);" data-lang="fr" lang="fr" aria-pressed="true">FR</button>
+            <span style="font-size: 11px;">/</span>
+            <button type="button" class="as-link" style="color: var(--color-neutral-700);" data-lang="en" lang="en" aria-pressed="false">EN</button>
+          </span>
+          <button type="button" class="as-link" style="color: var(--color-accent-700); border-bottom: 1px solid var(--color-accent); padding-bottom: 2px; font-feature-settings: &quot;tnum&quot;;" data-cart-open="" aria-expanded="false" aria-controls="panier"><span data-en="Cart">Panier</span><span style="margin-left: 7px;" data-cart-count="">0</span></button>
+        </nav>
+      </header>
+      <main id="contenu" tabindex="-1" style="animation: 0.4s ease 0s 1 normal both running elyaIn;">
+        <section style="display: grid; grid-template-columns: repeat(12, 1fr); min-height: 60vh;">
+          <div style="grid-column: 1 / span 6; padding: clamp(30px, 5vw, 76px) clamp(16px, 4vw, 54px); border-right: 1px solid var(--color-divider);" data-col="">
+            <h1 data-en="Write to us" style="font-family: var(--font-heading); font-weight: 300; font-size: clamp(40px, 6.6vw, 96px); line-height: 0.9; letter-spacing: -0.03em; margin: 0px 0px 18px;">Écrivez-nous</h1>
+            <p data-en="Sizing, a variation, a commission, a repair. One person reads these, usually within two working days." style="font-size: 15px; line-height: 1.62; max-width: 420px; margin: 0px 0px clamp(24px, 3vw, 40px);">Une taille, une variante, une commande sur mesure, une réparation. Une seule personne lit ces messages, en général sous deux jours ouvrés.</p>
+            <form novalidate style="max-width: 460px; display: flex; flex-direction: column; gap: 16px;" data-contact-form="">
+              <div class="field" style="display: block;"><label for="champ-nom" data-en="Name" style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-700); margin-bottom: 7px;">Nom</label><input class="input" id="champ-nom" name="nom" autocomplete="name" required aria-describedby="erreur-nom" maxlength="120" style="width: 100%; box-sizing: border-box;">
+              <p class="field-error" id="erreur-nom" data-error-for="nom" hidden></p></div>
+              <div class="field" style="display: block;"><label for="champ-email" data-en="Email" style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-700); margin-bottom: 7px;">E-mail</label><input class="input" id="champ-email" name="email" type="email" autocomplete="email" required aria-describedby="erreur-email" maxlength="254" style="width: 100%; box-sizing: border-box;">
+              <p class="field-error" id="erreur-email" data-error-for="email" hidden></p></div>
+              <div class="field" style="display: block;"><label for="champ-message" data-en="Message" style="display: block; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-700); margin-bottom: 7px;">Message</label><textarea class="input" id="champ-message" name="message" rows="5" required autocomplete="off" aria-describedby="erreur-message" maxlength="2000" style="width: 100%; box-sizing: border-box; font-family: var(--font-body); resize: vertical;"></textarea>
+              <p class="field-error" id="erreur-message" data-error-for="message" hidden></p></div>
+              <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <button class="btn btn-primary" type="submit" data-en="Send" style="letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; padding: 12px 22px;">Envoyer</button>
+                <span style="font-size: 12.5px; color: var(--color-accent-700)" role="status" aria-live="polite" data-en="Received — mockup, nothing is sent." data-sent="" hidden="">Reçu — maquette, rien n'est envoyé.</span></div>
+            </form>
+          </div>
+          <div style="grid-column: 7 / span 6; padding: clamp(30px, 5vw, 76px) clamp(16px, 4vw, 54px);" data-col="">
+            <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; max-width: 460px;">
+              <tbody>
+                <tr style="border-top: 1px solid var(--color-divider);"><th data-en="Workshop" style="text-align: left; font-weight: 400; padding: 11px 0px; color: var(--color-neutral-700); width: 40%;">Atelier</th><td style="padding: 11px 0px;">2 allée Simone de Beauvoir<br>77420 Champs-sur-Marne</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider);"><th data-en="Email" style="text-align: left; font-weight: 400; padding: 11px 0px; color: var(--color-neutral-700);">E-mail</th><td style="padding: 11px 0px;">atelier@elya.fr</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider);"><th data-en="Phone" style="text-align: left; font-weight: 400; padding: 11px 0px; color: var(--color-neutral-700);">Téléphone</th><td style="padding: 11px 0px; font-feature-settings: &quot;tnum&quot;;">+33 1 60 95 00 00</td></tr>
+                <tr style="border-top: 1px solid var(--color-divider); border-bottom: 1px solid var(--color-divider);"><th data-en="Appointments" style="text-align: left; font-weight: 400; padding: 11px 0px; color: var(--color-neutral-700);">Rendez-vous</th><td data-en="Thu–Sat, 10:00–18:00" style="padding: 11px 0px;">Jeu.–sam., 10h–18h</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+      <footer style="border-top: 1px solid var(--color-divider); padding: clamp(24px, 4vw, 44px) clamp(16px, 4vw, 54px); display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-neutral-700);">
+        <span data-en="Élya Jewellry — 316L steel — Champs-sur-Marne">Élya Jewellry — acier 316L — Champs-sur-Marne</span>
+        <span style="display: flex; gap: 20px; flex-wrap: wrap;">
+          <a href="collection.html" data-en="Collection" style="color: var(--color-neutral-700);">Collection</a>
+          <a href="atelier.html" data-en="Workshop" style="color: var(--color-neutral-700);">Atelier</a>
+          <a href="contact.html" style="color: var(--color-neutral-700);">Contact</a>
+          <span style="font-feature-settings: &quot;tnum&quot;;">© 2026</span>
+        </span>
+      </footer>
+    </div>
+  </div>
+  <div style="position: fixed; inset: 0px; z-index: 60; display: flex; justify-content: flex-end; background: rgba(23, 22, 20, 0.28);" data-cart="" id="panier" role="dialog" aria-modal="true" aria-label="Panier" hidden="">
+    <div style="flex: 1 1 auto;" data-cart-close="" aria-hidden="true"></div>
+    <div style="width: min(400px, 92vw); background: var(--color-bg); border-left: 1px solid var(--color-divider); padding: 24px clamp(18px, 3vw, 30px); overflow-y: auto; box-shadow: var(--shadow-lg);">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--color-divider); padding-bottom: 12px; margin-bottom: 18px;">
+        <span data-en="Cart" style="font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;">Panier</span>
+        <button type="button" class="as-link" data-en="Close" style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-neutral-700);" data-cart-close="">Fermer</button>
+      </div>
+      <p data-en="Empty for now." style="font-size: 14px; color: var(--color-neutral-700); margin: 0px;" data-cart-empty="">Vide pour l'instant.</p>
+      <div data-cart-lines=""></div><div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--color-text); padding-top: 12px; margin-top: 4px;">
+        <span data-en="Total" style="font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;">Total</span>
+        <span style="font-family: var(--font-heading); font-size: 22px; font-feature-settings: &quot;tnum&quot;;" data-cart-total="">0 €</span>
+      </div>
+      <button class="btn btn-primary btn-block" data-en="Checkout" style="margin-top: 18px; letter-spacing: 0.14em; text-transform: uppercase; font-size: 12px; padding: 13px;">Passer commande</button>
+      <p data-en="Mockup — no payment is processed." style="font-size: 11.5px; color: var(--color-neutral-700); margin: 12px 0px 0px; line-height: 1.55;">Maquette — aucun paiement n'est traité.</p>
+    </div>
+  </div>
+  <script src="main.js" defer></script>
+</body>
+</html>
