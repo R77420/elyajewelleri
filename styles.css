@@ -1033,6 +1033,134 @@ html {
   border: 0;
 }
 
+/* ── Motion ────────────────────────────────────────────────────────────────
+   §6 pose trois règles que le code enfreignait : plafond à 300 ms avec cible
+   150–250, courbes cubic-bezier personnalisées uniquement, et jamais ease-in
+   sur une entrée. L'arrivée des pages tournait à 400 ms sur le mot-clé `ease`.
+
+   Les durées et les courbes deviennent des tokens : une valeur en dur dans
+   une règle est une décision qu'on ne peut plus relire. */
+
+:root {
+  /* décélération exponentielle — arrivées et états */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* courbe de tiroir, empruntée à iOS : démarre franc, s'assoit sans rebond */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --dur-press: 120ms;     /* retour immédiat */
+  --dur-state: 200ms;     /* survol, couleur, filet */
+  --dur-arrival: 260ms;   /* entrée de page */
+  --dur-overlay: 280ms;   /* tiroir — plafond §6 à 300 ms */
+  --dur-exit: 180ms;      /* toujours plus rapide que l'entrée */
+}
+
+/* ── Arrivée ──────────────────────────────────────────────────────────────
+   L'accueil n'en a pas, et c'est délibéré : c'est le point d'atterrissage,
+   pas une transition. Les quatre autres pages se rejoignent depuis quelque
+   part, et l'arrivée dit ce déplacement — c'est le sens qu'elle avait dans
+   la version monopage, préservé ici. */
+
+[data-arrival] {
+  animation: var(--dur-arrival) var(--ease-out) both elyaIn;
+}
+
+/* ── Le filet du prix s'étend ─────────────────────────────────────────────
+   Le moment que §6 nomme. Un trait laiton se dessine sous la carte, de
+   gauche à droite : la ligne du pli et le trait de laiton des dessins,
+   devenus geste d'interface. Rien ne lévite, rien ne grandit, rien ne prend
+   d'ombre.
+
+   Le sélecteur vise le lien de pièce partout où il existe — carrousel de
+   l'accueil, grille de la collection, bandeau « même établi » — sans un
+   attribut de plus dans le HTML. Le pseudo-élément est en position absolue :
+   il ne devient donc pas un item flex de la carte. */
+
+main a[href^="piece.html"] {
+  position: relative;
+}
+
+main a[href^="piece.html"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-state) var(--ease-out);
+}
+
+/* Le clavier y a droit comme la souris. */
+main a[href^="piece.html"]:focus-visible::before {
+  transform: scaleX(1);
+}
+
+/* Le survol reste derrière hover:hover — sur tactile il resterait collé
+   après le tap. */
+@media (hover: hover) and (pointer: fine) {
+  main a[href^="piece.html"]:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+/* ── Le tiroir vient du bord où il vit ────────────────────────────────────
+   Il apparaissait et disparaissait sèchement. allow-discrete retarde le
+   passage à display: none le temps de la sortie ; là où il n'est pas
+   supporté, le tiroir s'affiche d'un coup — l'ancien comportement. */
+
+[data-cart] {
+  opacity: 0;
+  transition:
+    opacity var(--dur-exit) var(--ease-out),
+    display var(--dur-exit) allow-discrete;
+}
+[data-cart]:not([hidden]) {
+  opacity: 1;
+  transition:
+    opacity var(--dur-overlay) var(--ease-out),
+    display var(--dur-overlay) allow-discrete;
+}
+@starting-style {
+  [data-cart]:not([hidden]) { opacity: 0; }
+}
+
+[data-cart] > div:last-child {
+  transform: translateX(100%);
+  transition: transform var(--dur-exit) var(--ease-drawer);
+}
+[data-cart]:not([hidden]) > div:last-child {
+  transform: translateX(0);
+  transition: transform var(--dur-overlay) var(--ease-drawer);
+}
+@starting-style {
+  [data-cart]:not([hidden]) > div:last-child { transform: translateX(100%); }
+}
+
+/* ── Retour à la pression ─────────────────────────────────────────────────
+   §6 autorise l'échelle à partir d'une valeur visible (0,96–0,98). Réservé
+   aux vrais boutons : un lien de texte qui rétrécit ferait accident. */
+
+.btn,
+[data-qty-dec],
+[data-qty-inc],
+[data-cart-lines] button {
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+[data-qty-dec]:active,
+[data-qty-inc]:active,
+[data-cart-lines] button:active {
+  transform: scale(0.95);
+}
+
+a {
+  transition: color var(--dur-state) var(--ease-out);
+}
+
 /* Onze liens d'en-tête précèdent le contenu sur chaque page. */
 .skip-link {
   position: absolute;
@@ -1053,7 +1181,54 @@ html {
    certaines technologies d'assistance y posent le focus sans que l'heuristique
    de :focus-visible se déclenche. Un lien d'évitement invisible ne sert à rien. */
 .skip-link:focus { transform: translateY(0); }
+
+/* ── Mouvement réduit ─────────────────────────────────────────────────────
+   §6 l'exige nommément et il manquait — le seul vrai manquement
+   d'accessibilité de la motion du site.
+
+   Réduire, pas éteindre. L'opacité et la couleur portent du sens et restent :
+   le tiroir se signale toujours, le filet du prix apparaît toujours, les liens
+   changent toujours de teinte. C'est le déplacement qui disparaît — montée de
+   page, glissement du tiroir, échelle à la pression. Un `animation: none`
+   global supprimerait aussi le retour utile, ce que la règle ne demande pas. */
+
+@keyframes elyaFondu {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* l'arrivée garde son fondu, perd sa montée */
+  [data-arrival] {
+    animation: var(--dur-arrival) var(--ease-out) both elyaFondu;
+  }
+
+  /* le filet s'affiche au lieu de se dessiner */
+  main a[href^="piece.html"]::before {
+    transition: none;
+  }
+
+  /* le tiroir se fond sans glisser */
+  [data-cart] > div:last-child,
+  [data-cart]:not([hidden]) > div:last-child {
+    transform: none;
+    transition: none;
+  }
+
+  /* la pression ne déforme plus ; le bouton répond toujours */
+  .btn,
+  [data-qty-dec],
+  [data-qty-inc],
+  [data-cart-lines] button {
+    transition: none;
+  }
+  .btn:active,
+  [data-qty-dec]:active,
+  [data-qty-inc]:active,
+  [data-cart-lines] button:active {
+    transform: none;
+  }
+
   .skip-link { transition: none; }
 }
 
