@@ -60,6 +60,35 @@
   function pad(i) { return String(i + 1).padStart(2, '0'); }
   function artUrl(glyph) { return 'images/' + glyph + '.svg'; }
 
+  // Un panier d'atelier : les séries font 20 à 60 pièces, 99 est déjà au-delà
+  // du raisonnable. La borne existe pour qu'un clic répété ne produise pas un
+  // total absurde ni une ligne qui déborde.
+  var MAX_QTY = 99;
+
+  /* ── libellés ───────────────────────────────────────────────────────────
+     Les textes présents dans le HTML basculent via data-en. Ceux que le JS
+     fabrique — noms accessibles, messages d'erreur, annonces — vivent ici,
+     dans les deux langues, pour que rien ne reste en français dans une
+     interface passée en anglais. */
+
+  var T = {
+    cart:        { fr: 'Panier', en: 'Cart' },
+    qtyDown:     { fr: 'Diminuer la quantité', en: 'Decrease quantity' },
+    qtyUp:       { fr: 'Augmenter la quantité', en: 'Increase quantity' },
+    qtyMax:      { fr: 'Quantité maximale atteinte', en: 'Maximum quantity reached' },
+    lineDown:    { fr: 'Retirer un exemplaire — ', en: 'Remove one — ' },
+    lineUp:      { fr: 'Ajouter un exemplaire — ', en: 'Add one — ' },
+    shownOne:    { fr: '1 pièce affichée', en: '1 piece shown' },
+    shownMany:   { fr: ' pièces affichées', en: ' pieces shown' },
+    shownNone:   { fr: 'Aucune pièce dans cette catégorie', en: 'No pieces in this category' },
+    errNom:      { fr: 'Indiquez votre nom.', en: 'Enter your name.' },
+    errEmail:    { fr: 'Indiquez votre e-mail.', en: 'Enter your email address.' },
+    errEmailBad: { fr: 'Cette adresse semble incomplète — il manque un @ ou ce qui le suit.',
+                   en: 'This address looks incomplete — the @ or what follows it is missing.' },
+    errMessage:  { fr: 'Écrivez votre message.', en: 'Write your message.' }
+  };
+  function t(key) { return T[key][lang]; }
+
   /* ── état conservé d'une page à l'autre ─────────────────────────────── */
 
   function read(key, fallback) {
@@ -98,7 +127,19 @@
     $$('[data-lang]').forEach(function (a) {
       var on = a.getAttribute('data-lang') === lang;
       a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-700)';
+      a.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
+  }
+
+  // Les noms accessibles fabriqués en JS doivent suivre la langue comme le
+  // reste ; sans cela l'interface anglaise garde des libellés français que
+  // seul un lecteur d'écran entendrait.
+  function paintAccessibleNames() {
+    var drawer = $('[data-cart]');
+    if (drawer) drawer.setAttribute('aria-label', t('cart'));
+    var dec = $('[data-qty-dec]'), inc = $('[data-qty-inc]');
+    if (dec) dec.setAttribute('aria-label', t('qtyDown'));
+    if (inc) inc.setAttribute('aria-label', t('qtyUp'));
   }
 
   function setLang(next) {
@@ -109,6 +150,9 @@
     renderCart();
     swapLang();
     paintLangToggle();
+    paintAccessibleNames();
+    var active = $('[data-filter][aria-pressed="true"]');
+    if (active) announceFilter(active.getAttribute('data-filter'));
   }
 
   /* ── panier ─────────────────────────────────────────────────────────── */
@@ -122,7 +166,7 @@
   function saveCart() { write('elya.cart', cart); }
 
   function setQty(id, n) {
-    if (n > 0) cart[id] = n; else delete cart[id];
+    if (n > 0) cart[id] = Math.min(n, MAX_QTY); else delete cart[id];
     saveCart();
     renderCart();
   }
@@ -160,6 +204,11 @@
     var inc = el('button', btnStyle, '+');
     dec.type = 'button';
     inc.type = 'button';
+    // "−" et "+" ne nomment pas leur action : le nom accessible dit laquelle,
+    // et sur quelle pièce — un panier en contient plusieurs.
+    dec.setAttribute('aria-label', t('lineDown') + p.name);
+    inc.setAttribute('aria-label', t('lineUp') + p.name);
+    if (cart[p.id] >= MAX_QTY) { inc.disabled = true; inc.title = t('qtyMax'); }
     dec.addEventListener('click', function () { setQty(p.id, cart[p.id] - 1); });
     inc.addEventListener('click', function () { setQty(p.id, cart[p.id] + 1); });
     stepper.appendChild(dec);
@@ -181,7 +230,12 @@
     if (!host) return;
     host.textContent = '';
     var ids = Object.keys(cart);
-    ids.forEach(function (id) { host.appendChild(cartLine(byId[id])); });
+    host.setAttribute('role', 'list');
+    ids.forEach(function (id) {
+      var line = cartLine(byId[id]);
+      line.setAttribute('role', 'listitem');
+      host.appendChild(line);
+    });
 
     var empty = $('[data-cart-empty]');
     if (empty) empty.hidden = ids.length > 0;
@@ -189,9 +243,46 @@
     if (total) total.textContent = euro(cartTotal());
   }
 
+  /* ── tiroir du panier : un vrai dialogue modal ──────────────────────────
+     Ouvert, il capte le focus ; fermé, il le rend au bouton qui l'a ouvert.
+     Sans cela le clavier continue de parcourir la page derrière le voile, et
+     l'utilisateur se retrouve à tabuler dans une interface qu'il ne voit plus. */
+
+  var lastFocus = null;
+
+  function focusablesIn(el) {
+    return $$('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])', el)
+      .filter(function (n) { return n.offsetParent !== null || n === document.activeElement; });
+  }
+
+  function trapTab(e) {
+    if (e.key !== 'Tab') return;
+    var drawer = $('[data-cart]');
+    if (!drawer || drawer.hidden) return;
+    var items = focusablesIn(drawer);
+    if (!items.length) return;
+    var first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
   function openCart(open) {
     var drawer = $('[data-cart]');
-    if (drawer) drawer.hidden = !open;
+    if (!drawer) return;
+    var wasOpen = !drawer.hidden;
+    drawer.hidden = !open;
+    $$('[data-cart-open]').forEach(function (b) { b.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+
+    if (open && !wasOpen) {
+      lastFocus = document.activeElement;
+      document.addEventListener('keydown', trapTab, true);
+      var target = $('[data-cart-close]:not([aria-hidden])', drawer) || focusablesIn(drawer)[0];
+      if (target) target.focus();
+    } else if (!open && wasOpen) {
+      document.removeEventListener('keydown', trapTab, true);
+      if (lastFocus && document.contains(lastFocus)) lastFocus.focus();
+      lastFocus = null;
+    }
   }
 
   /* ── fiche produit ──────────────────────────────────────────────────── */
@@ -266,16 +357,27 @@
 
   /* ── collection : filtres ───────────────────────────────────────────── */
 
-  function applyFilter(key) {
+  // Filtrer change la page sans la recharger : le trait laiton le montre, la
+  // région live le dit. Sans elle, huit pièces deviennent trois en silence.
+  function announceFilter(key) {
+    var out = $('[data-filter-status]');
+    if (!out) return;
+    var n = $$('[data-piece]').filter(function (a) { return !a.hidden; }).length;
+    out.textContent = n === 0 ? t('shownNone') : n === 1 ? t('shownOne') : n + t('shownMany');
+  }
+
+  function applyFilter(key, announce) {
     $$('[data-filter]').forEach(function (a) {
       var on = a.getAttribute('data-filter') === key;
       a.style.color = on ? 'var(--color-text)' : 'var(--color-neutral-700)';
       a.style.borderBottom = '1px solid ' + (on ? 'var(--color-accent)' : 'transparent');
+      a.setAttribute('aria-pressed', on ? 'true' : 'false');
       if (on) a.setAttribute('data-active', ''); else a.removeAttribute('data-active');
     });
     $$('[data-piece]').forEach(function (art) {
       art.hidden = key !== 'tout' && art.getAttribute('data-cat') !== key;
     });
+    if (announce) announceFilter(key);
   }
 
   /* ── câblage ────────────────────────────────────────────────────────── */
@@ -296,20 +398,30 @@
     });
 
     $$('[data-filter]').forEach(function (a) {
-      a.addEventListener('click', function (e) { e.preventDefault(); applyFilter(a.getAttribute('data-filter')); });
+      a.addEventListener('click', function () { applyFilter(a.getAttribute('data-filter'), true); });
     });
 
     var qtyOut = $('[data-qty]');
     if (qtyOut) {
       var qty = 1;
-      var paint = function () { qtyOut.textContent = String(qty); };
-      $('[data-qty-dec]').addEventListener('click', function () { qty = Math.max(1, qty - 1); paint(); });
-      $('[data-qty-inc]').addEventListener('click', function () { qty += 1; paint(); });
+      // le compteur n'est ni un champ ni un bouton : sans région live, son
+      // changement ne serait jamais annoncé
+      qtyOut.setAttribute('aria-live', 'polite');
+      qtyOut.setAttribute('role', 'status');
+      var dec = $('[data-qty-dec]'), inc = $('[data-qty-inc]');
+      var paint = function () {
+        qtyOut.textContent = String(qty);
+        dec.disabled = qty <= 1;
+        inc.disabled = qty >= MAX_QTY;
+        if (inc.disabled) inc.title = t('qtyMax'); else inc.removeAttribute('title');
+      };
+      dec.addEventListener('click', function () { qty = Math.max(1, qty - 1); paint(); });
+      inc.addEventListener('click', function () { qty = Math.min(MAX_QTY, qty + 1); paint(); });
       var add = $('[data-add]');
       if (add) {
         add.addEventListener('click', function () {
           var p = currentPiece();
-          cart[p.id] = (cart[p.id] || 0) + qty;
+          cart[p.id] = Math.min((cart[p.id] || 0) + qty, MAX_QTY);
           saveCart();
           renderCart();
           swapLang();
@@ -319,14 +431,71 @@
       paint();
     }
 
+    wireForm();
+  }
+
+  /* ── formulaire ─────────────────────────────────────────────────────────
+     La validation native affiche des bulles dans la langue du navigateur, pas
+     dans celle de la page, et disparaît au premier clic. On la désactive
+     (novalidate) pour écrire les messages nous-mêmes : en place, persistants,
+     bilingues, et rattachés au champ par aria-describedby. La saisie n'est
+     jamais effacée. */
+
+  function fieldError(name) {
+    var input = document.getElementById('champ-' + name);
+    if (!input) return null;
+    var v = input.value.trim();
+    if (!v) return t(name === 'nom' ? 'errNom' : name === 'email' ? 'errEmail' : 'errMessage');
+    // volontairement permissif : on refuse ce qui ne peut pas être une adresse,
+    // pas ce qui s'écarte d'une expression régulière trop zélée
+    if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return t('errEmailBad');
+    return null;
+  }
+
+  function showError(name, message) {
+    var input = document.getElementById('champ-' + name);
+    var slot = $('[data-error-for="' + name + '"]');
+    if (!input || !slot) return;
+    slot.textContent = message || '';
+    slot.hidden = !message;
+    if (message) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  }
+
+  function wireForm() {
     var form = $('[data-contact-form]');
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var sent = $('[data-sent]');
-        if (sent) sent.hidden = false;
+    if (!form) return;
+    var names = ['nom', 'email', 'message'];
+
+    // l'erreur s'efface dès que la saisie reprend : la laisser sous un champ
+    // qu'on est en train de corriger est un reproche qui n'a plus lieu d'être
+    names.forEach(function (n) {
+      var input = document.getElementById('champ-' + n);
+      if (!input) return;
+      input.addEventListener('input', function () {
+        if (input.getAttribute('aria-invalid')) showError(n, null);
       });
-    }
+      input.addEventListener('blur', function () {
+        if (input.value.trim()) showError(n, fieldError(n));
+      });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var firstBad = null;
+      names.forEach(function (n) {
+        var msg = fieldError(n);
+        showError(n, msg);
+        if (msg && !firstBad) firstBad = n;
+      });
+      var sent = $('[data-sent]');
+      if (firstBad) {
+        if (sent) sent.hidden = true;
+        document.getElementById('champ-' + firstBad).focus();
+        return;
+      }
+      if (sent) sent.hidden = false;
+    });
   }
 
   function init() {
@@ -336,6 +505,9 @@
     renderCart();
     swapLang();
     paintLangToggle();
+    paintAccessibleNames();
+    // état de départ sans annonce : rien n'a encore changé pour l'utilisateur
+    if ($('[data-filter]')) applyFilter('tout', false);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
