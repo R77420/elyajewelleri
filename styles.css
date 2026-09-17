@@ -1080,5 +1080,81 @@ html {
 @media (pointer: coarse) {
   .input {
     font-size: 16px;
+    min-height: 44px;
   }
+  .btn {
+    min-height: 44px;
+  }
+}
+
+/* ── En-tête en portrait ───────────────────────────────────────────────────
+   Le panier est sorti du <nav> — il ouvre un dialogue, il ne mène nulle part.
+   Devenu enfant direct de l'en-tête, il partage la rangée de la marque sous
+   600 px, la où l'en-tête passait a trois rangées et 127 px, soit 16 % du
+   viewport occupés en permanence par une barre collante.
+
+   Mesuré : l'en-tête se casse a 600 px (le nav passe sous la marque) puis vers
+   440 px (le nav se coupe lui-meme). Le point de rupture vient de la, pas
+   d'une taille d'appareil. */
+
+header > nav {
+  /* trois enfants desormais : marque, nav, panier. Cette marge regroupe nav et
+     panier a droite, comme lorsque le panier etait dans le nav. */
+  margin-left: auto;
+}
+
+@media (max-width: 599px) {
+  header {
+    /* §4 admet deja un rythme plus serre en mobile */
+    padding-top: 14px !important;
+    padding-bottom: 12px !important;
+    row-gap: 20px !important;
+  }
+  header > nav {
+    margin-left: 0;
+    order: 1;            /* marque et panier restent sur la premiere rangee */
+    flex-basis: 100%;
+  }
+}
+
+/* ── Cibles tactiles ───────────────────────────────────────────────────────
+   Les contrôles mesurent 14 à 23 px de haut : c'est la typographie du système,
+   et §3 la fixe. On n'y touche pas. On agrandit la zone atteignable sans
+   déplacer un seul pixel visible, par un calque absolu centré sur le contrôle.
+
+   Verticalement seulement : en largeur, les libellés sont déjà séparés de 14 à
+   21 px et un élargissement les ferait se chevaucher — un calque qui vole le
+   clic du voisin est pire que le défaut qu'il corrige. */
+
+@media (pointer: coarse) {
+  header > a,
+  header nav a,
+  header [data-cart-open],
+  footer a,
+  [data-filter],
+  [data-lang],
+  main a[href] {
+    position: relative;
+  }
+
+  header > a::after,
+  header nav a::after,
+  header [data-cart-open]::after,
+  footer a::after,
+  [data-filter]::after,
+  [data-lang]::after,
+  main a[href]::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* FR et EN ne font que 18 et 20 px de large, sous le minimum de 24. Leurs
+     centres sont distants de 40 px : l'exception d'espacement de WCAG 2.5.8
+     s'applique, et l'agrandissement vertical suffit. Les élargir aurait poussé
+     le nav sur une rangée de plus — un en-tête plus haut pour rien. */
 }
